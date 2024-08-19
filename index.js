@@ -2,6 +2,7 @@ const express = require('express');
 // const chalk = require('chalk');const path = require('path');
 const { addNote, getNotes, removeNote, editNote } = require('./notes.controller');
 
+// ветка edit
 const port = 3000;
 const app = express();
 const path = require('path');
