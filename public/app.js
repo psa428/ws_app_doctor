@@ -1,25 +1,26 @@
-document.addEventListener('click',event => {
+document.addEventListener('submit',event => {
     
-    if (event.target.dataset.type === 'remove') {
-        const id = event.target.dataset.id
+        
+        const form = document.getElementById('form');
+        event.target.disabled = true;
+        let name = document.getElementById('name').value;
+        let phone = document.getElementById('phone').value;
+        let problem = document.getElementById('problem').value;
+        
+        
+        submit(name, phone, problem)
+            .then(result => {
+                event.target.disabled = false;
+                
+            })
 
-        remove(id).then(() => {
-            event.target.closest('li').remove();
-        });
-    } else if (event.target.dataset.type === 'edit') {
-        const idEdit = event.target.dataset.id
-        
-        
-        let currentTitle = event.target.dataset.title;
-        let newTitle = prompt('Редактирование заметки', currentTitle);
-       
-        if (newTitle) {
-            edit(idEdit, newTitle).then (() => location.reload());   
-        }
-        
-    }
+            .catch (error => {
+                console.error('Ошибка ' + error)
+            })        
+        // }
+}  );
 
-}  )
+  
 
 async function remove(id) {
     await fetch(`/${id}`, {method:  'DELETE'});
@@ -36,3 +37,20 @@ async function edit(id, title) {
         })
     });
 }
+
+async function submit(name, phone, problem) {
+    
+    
+    const result =  await fetch(`/`, {
+        method: 'POST',
+        headers:    {'Content-Type': 'application/json;characterset=utf-8' },
+        body:  JSON.stringify({
+            name:   name,
+            phone:  phone,
+            problem:    problem
+        }) 
+    }
+    );  
+     
+    return result; 
+};

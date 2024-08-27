@@ -29,6 +29,6 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(port, () => {
-    //  console.log(chalk.green(`Server has been started on port ${port}... `));
+    
     console.log(`Server has been started on port ${port}... `);
 });
