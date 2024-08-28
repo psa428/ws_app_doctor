@@ -2,9 +2,9 @@ const Appointment = require('./models/Appointment');
 const User = require('./models/User');
 
 async function addAppointment(name, phone, problem) {
-    let date_create = new Date();
+    let currentDate = new Date();
     
-    let doc = {name: name, phone: phone, problem: problem, date_create: date_create} ;
+    let doc = {name: name, phone: phone, problem: problem, date_create: currentDate} ;
     
     await Appointment.create(doc);
    
@@ -12,18 +12,18 @@ async function addAppointment(name, phone, problem) {
 
 async function loginUser(email, password) {
     const user = await User.findOne( { email });
-    console.log(`in loginUser user = ${user}`);
+   
     if (!user) {
         throw new Error('Пользователь не найден');
     }
 }
 
 
-async function getNotes() {
+async function getAppointments() {
     
-    const notes = await Note.find();
+    const appointments = await Appointment.find();
     
-    return notes;
+    return appointments;
 };
 
 async function removeNote(id) {
@@ -39,5 +39,5 @@ async function editNote(id, title) {
 };
 
 module.exports = {
-    addAppointment, loginUser
+    addAppointment, loginUser, getAppointments
 }

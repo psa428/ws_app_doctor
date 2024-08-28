@@ -1,6 +1,6 @@
 const express = require('express');
 // const chalk = require('chalk');const path = require('path');
-const { addAppointment, loginUser } = require('./appointment.controller');
+const { addAppointment, loginUser , getAppointments} = require('./appointment.controller');
 
 // ветка edit
 const port = 3000;
@@ -21,6 +21,7 @@ app.use(express.urlencoded({
 
 app.use(express.json());
 
+//  Login
 app.get('/login', function(req, res){
     res.render('login', {
         title:  'Login',
@@ -30,10 +31,10 @@ app.get('/login', function(req, res){
 
 app.post('/login', async (req, res) => {
     try {
-        console.log(`in app.post /login email=${req.body.email} password = ${req.body.password}`)
+        
         await loginUser(req.body.email, req.body.password)
 
-        res.redirect('/list');
+        res.redirect('/applst');
     } catch (e) {
         res.render('login', {
             title:  'Login',
@@ -41,6 +42,8 @@ app.post('/login', async (req, res) => {
         })
     }
 })
+
+    //  Запись к врачу
 
 app.get('/', async (req, res) => {
     
@@ -76,6 +79,17 @@ app.post('/', async (req, res) => {
     }
     
 })
+
+    //  Таблица заявок
+
+app.get('/applst', async(req, res) => {
+    res.render('applst', {
+        title:  'Перечень заявок',
+        appointments:  await getAppointments(),
+        error:  false
+    })
+    
+});
 
 app.delete('/:id', async(req, res) => {
     
