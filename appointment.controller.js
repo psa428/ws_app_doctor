@@ -1,4 +1,5 @@
 const Appointment = require('./models/Appointment');
+const User = require('./models/User');
 
 async function addAppointment(name, phone, problem) {
     let date_create = new Date();
@@ -8,6 +9,14 @@ async function addAppointment(name, phone, problem) {
     await Appointment.create(doc);
    
 };
+
+async function loginUser(email, password) {
+    const user = await User.findOne( { email });
+    console.log(`in loginUser user = ${user}`);
+    if (!user) {
+        throw new Error('Пользователь не найден');
+    }
+}
 
 
 async function getNotes() {
@@ -30,5 +39,5 @@ async function editNote(id, title) {
 };
 
 module.exports = {
-    addAppointment, getNotes, removeNote, editNote
+    addAppointment, loginUser
 }

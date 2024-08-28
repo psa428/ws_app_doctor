@@ -1,12 +1,13 @@
 const express = require('express');
 // const chalk = require('chalk');const path = require('path');
-const { addAppointment } = require('./appointment.controller');
+const { addAppointment, loginUser } = require('./appointment.controller');
 
 // ветка edit
 const port = 3000;
 const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
+const { title } = require('process');
 
 
 app.set('views', 'pages');
@@ -20,9 +21,26 @@ app.use(express.urlencoded({
 
 app.use(express.json());
 
-// app.get('/', function(req, res){
-//     res.send('OK');
-// });
+app.get('/login', function(req, res){
+    res.render('login', {
+        title:  'Login',
+        error:  false
+    })
+});
+
+app.post('/login', async (req, res) => {
+    try {
+        console.log(`in app.post /login email=${req.body.email} password = ${req.body.password}`)
+        await loginUser(req.body.email, req.body.password)
+
+        res.redirect('/list');
+    } catch (e) {
+        res.render('login', {
+            title:  'Login',
+            error:  e.message
+        })
+    }
+})
 
 app.get('/', async (req, res) => {
     
@@ -42,8 +60,6 @@ app.post('/', async (req, res) => {
         // res.sendFile(path.join(basePath, 'index.html'));  
         res.render('index', {
             title:  'Запись к врачу',
-            // notes: await getNotes(),
-            
             created:    true,
             error:  false
         })
