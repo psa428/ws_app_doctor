@@ -79,12 +79,46 @@ function myFunction(e) {
     td = tr[i].getElementsByTagName("td")[1];
     if (td) {
       txtValue = td.textContent || td.innerText;
-      // console.log(`txtValue = ${txtValue}`)
+      
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
       } else {
         tr[i].style.display = "none";
       }
+    }
+  }
+}
+
+function sortTable() {
+  /**
+   *  Функция соритровки таблицы по имени пациента
+   */
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("table");
+  switching = true;
+  
+  while (switching) {
+    
+    switching = false;
+    rows = table.getElementsByTagName("TR");
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      
+      shouldSwitch = false;
+      //  Сравним соседние строки
+      x = rows[i].getElementsByTagName("TD")[1];
+      y = rows[i + 1].getElementsByTagName("TD")[1];
+      
+      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+        
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      // Перестановка
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
     }
   }
 }

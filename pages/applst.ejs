@@ -22,7 +22,7 @@
     .form-group {
         display:    flex;
         flex-direction: column;
-        margin: 30px auto;
+        margin: auto;
         width:  80%;
         height: 300px;
         
@@ -68,6 +68,17 @@
 	border: 1px solid #dddddd;
 	padding: 5px;
 }
+
+    .pagination {
+        display: inline-block;
+    }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+    }
     </style>
 
   
@@ -86,6 +97,7 @@
             
     <div class="container">
         <input 
+            style="margin-left: 100px;"
             id="search"
             class="search"
             name="search"
@@ -95,6 +107,10 @@
             
         />
             <h1><%= title %></h1>
+            <div style="margin: auto auto auto 100px"> 
+                <p><button onclick="sortTable()" style="margin-bottom: 0">Сортировка</button></p>    
+                <p>Нажмите кнопку для сортировки таблицы по имени:</p>
+            </div>
             
             
         <div class="form-group">
@@ -113,7 +129,10 @@
                             : appointments[i].date_create.getDate()) + '.' +
                             ((appointments[i].date_create.getMonth() < 10) ? '0' + appointments[i].date_create.getMonth() 
                             : appointments[i].date_create.getMonth()) + '.' +
-                            appointments[i].date_create.getFullYear()
+                            appointments[i].date_create.getFullYear() + '   ' +
+                            appointments[i].date_create.getHours() + ':' +
+                            appointments[i].date_create.getMinutes()
+
                             %></td>
                         <td><%= appointments[i].name %></td>
                         <td><%= appointments[i].phone %></td>
@@ -126,6 +145,14 @@
             
 
         </form>
+        <div class="pagination">
+            <a href="<%= "/applst/" + 1 + "/" + limit %>">В начало</a>
+            <a href="<%= "/applst/" + String(currpage - 1) + "/" + limit %>">Предыдущая</a>
+            <a href="#">Страница: <%= currpage %></a>
+            <a href=<%= "/applst/" + String(currpage + 1) + "/" + limit %>>Следующая</a>
+            <a href="<%= "/applst/" + Math.ceil(cntRecords / limit) + "/" + limit %>">В конец</a>
+            
+          </div>
     </div>
     
     <script src="/app.js"></script>                    

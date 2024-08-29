@@ -1,6 +1,10 @@
 const express = require('express');
 // const chalk = require('chalk');const path = require('path');
-const { addAppointment, loginUser , getAppointments} = require('./appointment.controller');
+const { addAppointment, loginUser , getAppointments, getAppointmentsPage} = require('./appointment.controller');
+
+const LIMIT_STR = 3;
+let cntRecords = 0;
+
 
 // ветка edit
 const port = 3000;
@@ -83,38 +87,38 @@ app.post('/', async (req, res) => {
     //  Таблица заявок
 
 app.get('/applst', async(req, res) => {
+    let arr = await getAppointments();
+    cntRecords = arr.length;
     res.render('applst', {
         title:  'Перечень заявок',
-        appointments:  await getAppointments(),
+        appointments:  arr,
+        currpage:   1,
+        limit:  LIMIT_STR,
+        cntRecords: cntRecords,
         error:  false
     })
     
 });
 
-app.delete('/:id', async(req, res) => {
-    
-    await removeNote(req.params.id)
-    res.render('index', {
-        title:  'Express App',
-        notes:  await getNotes(),
-        created:    false,
-        error:  false
-    })
-});
+    // Таблица заявок. Пагинация
+    app.get('/applst/:numpage/:limit', async(req, res) => {
+        let param1 = req.params.numpage;
+        let param2 = req.params.limit;
+        let numpage = Number(param1);
+        let limit = Number(param2);
+        
+        
+        res.render('applst', {
+            title:  'Перечень заявок',
+            appointments:  await getAppointmentsPage(numpage, limit),
+            currpage:  numpage,
+            limit:  LIMIT_STR,
+            cntRecords: cntRecords,
+            error:  false
+        })
+        
+    });
 
-app.put('/:id', async(req, res) => {
-
-    
-     editNote(req.body.id, req.body.title)
-    
-    res.render('index', {
-        title:  'Express App',
-        notes:  await getNotes(),
-        created:    false,
-        error:  false   
-    })
-
-});    
 
 mongoose.connect(
     'mongodb+srv://andrewsitnikov428:chuck_428@cluster0.wrudc.mongodb.net/appointment?retryWrites=true&w=majority&appName=Cluster0'
